@@ -10,7 +10,7 @@ import pl.mjedynak.idea.plugins.builder.psi.PsiHelper;
 public class CreateBuilderDialogFactory {
 
     private static final String BUILDER_SUFFIX = "Builder";
-    private static final String METHOD_PREFIX = "with";
+    private static final String METHOD_PREFIX = ""; // empty by default
     private static final String DIALOG_NAME = "CreateBuilder";
 
     private PsiHelper psiHelper;

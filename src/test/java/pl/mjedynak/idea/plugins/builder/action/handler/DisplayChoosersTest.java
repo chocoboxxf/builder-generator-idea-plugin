@@ -120,6 +120,7 @@ public class DisplayChoosersTest {
         boolean isInner = true;
         boolean hasButMethod = true;
         boolean useSingleField = true;
+        boolean initMethodIsSrcClass = false;
         given(createBuilderDialogFactory.createBuilderDialog(psiClassFromEditor, project, psiPackage, existingBuilder)).willReturn(createBuilderDialog);
         given(createBuilderDialog.isInnerBuilder()).willReturn(isInner);
         given(createBuilderDialog.hasButMethod()).willReturn(hasButMethod);
@@ -141,6 +142,6 @@ public class DisplayChoosersTest {
         verify(memberChooserDialog).isOK();
         verify(createBuilderDialog).show();
         verify(memberChooserDialog).show();
-        verify(builderWriter).writeBuilder(eq(new BuilderContext(project, psiFieldsForBuilder, psiDirectory, CLASS_NAME, psiClassFromEditor, methodPrefix, isInner, hasButMethod, useSingleField)), eq(existingBuilder));
+        verify(builderWriter).writeBuilder(eq(new BuilderContext(project, psiFieldsForBuilder, psiDirectory, CLASS_NAME, psiClassFromEditor, methodPrefix, isInner, hasButMethod, useSingleField, initMethodIsSrcClass)), eq(existingBuilder));
     }
 }

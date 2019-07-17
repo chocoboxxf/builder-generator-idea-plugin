@@ -54,6 +54,7 @@ public class BuilderPsiClassBuilder {
 
     private boolean useSingleField = false;
     private boolean isInline = false;
+    private boolean isInitMethodInSrcClass = false;
 
     public BuilderPsiClassBuilder aBuilder(BuilderContext context) {
         initializeFields(context);
@@ -88,6 +89,7 @@ public class BuilderPsiClassBuilder {
         methodCreator = new MethodCreator(elementFactory, builderClassName);
         butMethodCreator = new ButMethodCreator(elementFactory);
         isInline = allSelectedPsiFields.size() == psiFieldsForConstructor.size();
+        isInitMethodInSrcClass = context.isInitMethodInSrcClass();
     }
 
     public BuilderPsiClassBuilder withFields() {
@@ -116,10 +118,16 @@ public class BuilderPsiClassBuilder {
     }
 
     public BuilderPsiClassBuilder withInitializingMethod() {
-        String prefix = isVowel(srcClassName.toLowerCase(Locale.ENGLISH).charAt(0)) ? AN_PREFIX : A_PREFIX;
-        PsiMethod staticMethod = elementFactory.createMethodFromText(
-                "public static " + builderClassName + prefix + srcClassName + "() { return new " + builderClassName + "(); }", srcClass);
-        builderClass.add(staticMethod);
+        if (isInitMethodInSrcClass) {
+          PsiMethod staticMethod = elementFactory.createMethodFromText(
+              "public static " + builderClassName + " builder() { return new " + builderClassName + "(); }", srcClass);
+          srcClass.add(staticMethod);
+        } else {
+          String prefix = isVowel(srcClassName.toLowerCase(Locale.ENGLISH).charAt(0)) ? AN_PREFIX : A_PREFIX;
+          PsiMethod staticMethod = elementFactory.createMethodFromText(
+              "public static " + builderClassName + prefix + srcClassName + "() { return new " + builderClassName + "(); }", srcClass);
+          builderClass.add(staticMethod);
+        }
         return this;
     }
 

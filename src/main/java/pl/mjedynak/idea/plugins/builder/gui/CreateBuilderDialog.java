@@ -60,6 +60,7 @@ public class CreateBuilderDialog extends DialogWrapper {
     private JCheckBox innerBuilder;
     private JCheckBox butMethod;
     private JCheckBox useSingleField;
+    private JCheckBox initMethodInSrcClass;
     private ReferenceEditorComboWithBrowseButton targetPackageField;
     private PsiClass existingBuilder;
 
@@ -198,6 +199,7 @@ public class CreateBuilderDialog extends DialogWrapper {
         gbConstraints.anchor = GridBagConstraints.WEST;
 
         innerBuilder = new JCheckBox();
+        innerBuilder.setSelected(true); // enabled by default
         innerBuilder.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -246,6 +248,33 @@ public class CreateBuilderDialog extends DialogWrapper {
         useSingleField = new JCheckBox();
         panel.add(useSingleField, gbConstraints);
         // useSingleField
+
+        // whether to insert static initializer in source class or builder class
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 0;
+        gbConstraints.weightx = 0;
+        gbConstraints.gridy = 7;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+        panel.add(new JLabel("Initializer in source class"), gbConstraints);
+
+        gbConstraints.insets = new Insets(4, 8, 4, 8);
+        gbConstraints.gridx = 1;
+        gbConstraints.weightx = 1;
+        gbConstraints.gridwidth = 1;
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.anchor = GridBagConstraints.WEST;
+
+        initMethodInSrcClass = new JCheckBox();
+        initMethodInSrcClass.setSelected(true); // enabled by default
+        initMethodInSrcClass.addActionListener(new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            targetPackageField.setEnabled(!initMethodInSrcClass.isSelected());
+          }
+        });
+        panel.add(initMethodInSrcClass, gbConstraints);
+        // whether to insert builder initializer in source class or builder class
 
         return panel;
     }
@@ -341,7 +370,11 @@ public class CreateBuilderDialog extends DialogWrapper {
         return useSingleField.isSelected();
     }
 
-    public PsiDirectory getTargetDirectory() {
+    public boolean isInitMethodInSrcClass() {
+        return initMethodInSrcClass.isSelected();
+    }
+
+  public PsiDirectory getTargetDirectory() {
         return targetDirectory;
     }
 
